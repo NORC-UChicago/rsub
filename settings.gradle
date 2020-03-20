@@ -1,0 +1,5 @@
+rootProject.name = 'rsub'
+include 'rsub-cli'
+include 'rsub-iom'
+include 'rsub-iom-meta'
+

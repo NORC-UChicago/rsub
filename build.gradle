@@ -1,0 +1,44 @@
+plugins {
+    id 'com.palantir.git-version' version '0.12.2'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'checkstyle'
+    group = 'org.norc'
+    version = getVersion()
+
+    repositories {
+        jcenter()
+    }
+
+    configurations {
+        checkstyleConfig
+    }
+
+    dependencies {
+        checkstyleConfig('com.puppycrawl.tools:checkstyle:8.29') { transitive = false }
+
+        implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
+        implementation 'org.apache.logging.log4j:log4j-1.2-api:2.12.1'
+
+        testImplementation "junit:junit:4.12"
+    }
+
+    checkstyle {
+        toolVersion '8.29'
+        config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
+    }
+}
+
+project(":rsub-cli") {
+    dependencies {
+        implementation project(":rsub-iom")
+    }
+}
+
+project(":rsub-iom-meta") {
+    dependencies {
+        implementation project(":rsub-iom")
+    }
+}

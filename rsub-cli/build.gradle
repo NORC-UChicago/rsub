@@ -1,0 +1,37 @@
+plugins {
+    id 'application'
+}
+
+mainClassName = "org.norc.rsub.App"
+
+dependencies {
+    compile 'info.picocli:picocli:4.2.0'
+    annotationProcessor('info.picocli:picocli:4.2.0')
+    compile 'org.fusesource.jansi:jansi:1.18'
+    compile 'commons-io:commons-io:2.6'
+}
+
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Title": "rsub",
+                "Implementation-Version": project.version,
+                "Main-Class": mainClassName
+        )
+    }
+}
+
+run {
+    jvmArgs "-Djava.library.path=" + file("src/main/dist/natives").toPath()
+    jvmArgs "-Dlog4j.configurationFile=" + file("src/test/resources/log4j2-test.xml").toPath()
+    args "-sysin " + file("src/test/resources/test.sas").toPath()
+    args "--config-class org.norc.rsub.ZeroConfigurator"
+}
+
+test {
+    jvmArgs "-Djava.library.path=" + file("src/main/dist/natives").toPath()
+}

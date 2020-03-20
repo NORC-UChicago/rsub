@@ -1,0 +1,3 @@
+dependencies {
+    implementation fileTree('libs') { include '*.jar' }
+}

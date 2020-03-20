@@ -1,0 +1,5 @@
+dependencies {
+    implementation fileTree('libs') { include '*.jar' exclude 'sas.svc.connection.jar' }
+    compile files('./libs/sas.svc.connection.jar')
+    compileOnly 'org.jetbrains:annotations:17.0.0'
+}
