@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Redirect>
+  <LogicalServer ClassIdentifier="440196d4-90f0-11d0-9f41-00a024bb830c" Name="SASApp">
+    <Properties>
+      <Property DefaultValue="Negotiate" Name="Security Package" PropertyName="SecurityPackage"></Property>
+      <Property DefaultValue="Kerberos,NTLM" Name="Security Package List" PropertyName="SecurityPackageList"></Property>
+    </Properties>
+    <UsingComponents>
+      <ServerComponent ClassIdentifier="440196d4-90f0-11d0-9f41-00a024bb830c" Name="SASApp">
+        <SourceConnection>
+          <TCPIPConnection ApplicationProtocol="Bridge" CommunicationProtocol="TCP" HostName="workspace.server.host" Name="" Port="8591">
+            <Properties>
+              <Property DefaultValue="everything" Name="Required Encryption Level" PropertyName="RequiredEncryptionLevel"></Property>
+              <Property DefaultValue="AES" Name="ServerEncryptionAlgorithms" PropertyName="ServerEncryptionAlgorithms"></Property>
+            </Properties>
+            <Domain>
+              <AuthenticationDomain Name="DefaultAuth"></AuthenticationDomain>
+            </Domain>
+          </TCPIPConnection>
+        </SourceConnection>
+      </ServerComponent>
+    </UsingComponents>
+  </LogicalServer>
+</Redirect>
