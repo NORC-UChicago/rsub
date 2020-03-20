@@ -30,7 +30,7 @@ public class ManifestVersionProvider implements IVersionProvider {
 
   private boolean isApplicableManifest(Manifest manifest) {
     Attributes attributes = manifest.getMainAttributes();
-    return "rsub".equals(attributes.get(key("Implementation-Title")));
+    return "rsub-cli".equals(attributes.get(key("Implementation-Title")));
   }
 
   private static Attributes.Name key(String key) {

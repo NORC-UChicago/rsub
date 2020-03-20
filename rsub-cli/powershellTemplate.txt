@@ -1,0 +1,66 @@
+#requires -version 3
+${"<#"}
+.SYNOPSIS
+${applicationName} startup script for Powershell
+${"#>"}
+
+#----------------------------------------------------------[Declarations]----------------------------------------------------------
+
+\$DIRNAME="\$PSScriptRoot/"
+
+\$APP_BASE_NAME=[io.path]::GetFileNameWithoutExtension(\$MyInvocation.MyCommand.Definition)
+\$APP_HOME="\$DIRNAME${appHomeRelativePath}"
+
+\$DEFAULT_JVM_OPTS=${defaultJvmOpts}
+
+\$CLASSPATH="${classpath}"
+
+#-----------------------------------------------------------[Functions]------------------------------------------------------------
+
+Function java_from_env {
+    Write-Verbose "Checking JAVA_HOME"
+    if (Test-Path env:JAVA_HOME) {
+        Write-Verbose "Checking for Java in ""\$((Get-Item env:JAVA_HOME).Value)"""
+        \$java = Get-Command -ErrorAction SilentlyContinue \$(Join-Path \$env:JAVA_HOME "bin/java.exe")
+        if (\$java) {
+            Write-Verbose "Found Java via JAVA_HOME"
+            return \$java
+        }
+    }
+}
+
+Function java_from_path {
+    Write-Verbose "Checking PATH"
+    \$java=Get-Command -ErrorAction SilentlyContinue "java.exe"
+    if (\$java) {
+        Write-Verbose "Found Java via PATH"
+        return \$java
+    }
+}
+
+Function java_not_found {
+    Write-Error @"
+JAVA_HOME is set to an invalid directory: \$env:JAVA_HOME
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation.
+"@
+    exit 2
+}
+
+#-----------------------------------------------------------[Execution]------------------------------------------------------------
+
+:find_java
+foreach (\$iex in @('java_from_path', 'java_from_env')) {
+  \$java_exe=Invoke-Expression \$iex
+  if ([String]::IsNullOrWhitespace(\$java_exe)) { continue }
+  break find_java
+}
+
+if (-not \$java_exe) {
+
+}
+
+& \$java_exe \$DEFAULT_JVM_OPTS \$env:${optsEnvironmentVar} <% if ( appNameSystemProperty ) { %>"-D${appNameSystemProperty}=\$APP_BASE_NAME"<% } %> -classpath \$CLASSPATH ${mainClassName} \$Args
+
+exit \$LASTEXITCODE

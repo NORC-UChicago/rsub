@@ -18,7 +18,7 @@ compileJava {
 jar {
     manifest {
         attributes(
-                "Implementation-Title": "rsub",
+                "Implementation-Title": "rsub-cli",
                 "Implementation-Version": project.version,
                 "Main-Class": mainClassName
         )
@@ -35,3 +35,43 @@ run {
 test {
     jvmArgs "-Djava.library.path=" + file("src/main/dist/natives").toPath()
 }
+
+def scriptJvmOpts = [
+        "-Djava.library.path=TEMP_HOME/ext",
+        "-Dlog4j.configurationFile=TEMP_HOME/conf/log4j2.xml",
+        "-Dsasrsub.serverinfo=TEMP_HOME/conf/serverinfo.xml"
+]
+
+startScripts {
+    defaultJvmOpts += scriptJvmOpts
+    doLast {
+        unixScript.text = unixScript.text.replace("TEMP_HOME", "\$APP_HOME")
+        windowsScript.text = windowsScript.text.replace("TEMP_HOME", "%APP_HOME%")
+    }
+}
+
+class PowershellStartScript extends org.gradle.jvm.application.tasks.CreateStartScripts {
+    @Override
+    File getUnixScript() {
+        return new File(getOutputDir(), getApplicationName() + ".ps1")
+    }
+}
+
+class NullStartScriptGenerator implements ScriptGenerator {
+    @Override
+    void generateScript(JavaAppStartScriptGenerationDetails details, Writer destination) {
+        //ignored
+    }
+}
+
+task powershellStartScript(type: PowershellStartScript) {
+    outputDir = file('build/scripts')
+    applicationName = project.name
+    mainClassName = application.mainClassName
+    classpath = project.tasks[JavaPlugin.JAR_TASK_NAME].outputs.files + project.configurations.runtimeClasspath
+    defaultJvmOpts = scriptJvmOpts
+    unixStartScriptGenerator.template = resources.text.fromFile("powershellTemplate.txt")
+    windowsStartScriptGenerator = new NullStartScriptGenerator()
+}
+
+distZip.dependsOn powershellStartScript
