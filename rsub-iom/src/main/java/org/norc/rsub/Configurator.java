@@ -3,7 +3,7 @@ package org.norc.rsub;
 import com.sas.services.connection.ConnectionFactoryConfiguration;
 import com.sas.services.connection.Credential;
 
-public abstract class Configurator {
+public abstract class Configurator implements IConfigurator {
   private Credential credential;
   private ConnectionFactoryConfiguration configuration;
 

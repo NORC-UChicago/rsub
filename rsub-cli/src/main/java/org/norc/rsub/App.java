@@ -1,12 +1,16 @@
 package org.norc.rsub;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.fusesource.jansi.AnsiConsole;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
@@ -81,6 +85,17 @@ public class App implements Callable<Integer> {
         showDefaultValue = Visibility.NEVER,
         description = "defines an environment variable.  Can be used multiple times.")
     Map<String, String> sets = new HashMap<>();
+
+    File getLog() {
+      if (log==null || log.getAbsolutePath().isEmpty()) {
+        log = new File(String.format("%s\\%s-%s.log",
+            FilenameUtils.getFullPathNoEndSeparator(sysin.getAbsolutePath()),
+            FilenameUtils.getBaseName(sysin.getName()),
+            new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS").format(new Date())
+        ));
+      }
+      return log;
+    }
   }
 
   @ArgGroup(validate = false, heading = "", order = 2)
@@ -89,16 +104,23 @@ public class App implements Callable<Integer> {
   static class RsubOptionSection {
     @Option(
         names = "--config-class",
-        paramLabel = "<configurator>",
+        paramLabel = "<IConfigurator>",
         description = "the @|yellow,bold rsub|@ configuration class",
         defaultValue = "org.norc.rsub.XMLConfigurator")
-    Class configuratorClass = org.norc.rsub.XMLConfigurator.class;
+    Class<? extends IConfigurator> configuratorClass = org.norc.rsub.XMLConfigurator.class;
 
     @Option(
         names = "--encoding",
         description = "encoding of @|italic sysin|@ file",
         defaultValue = "UTF-8")
     String encoding = "UTF-8";
+
+    @Option(
+        names = "--destination-class",
+        paramLabel = "<IDestination>",
+        description = "the @|yellow,bold rsub|@ destination class",
+        defaultValue = "org.norc.rsub.FileDestination")
+    Class<? extends IDestination> destinationClass = org.norc.rsub.FileDestination.class;
   }
 
   /**
@@ -120,9 +142,23 @@ public class App implements Callable<Integer> {
   public Integer call() throws Exception {
     if (sasOptions == null || sasOptions.sysin == null)
       throw new IllegalArgumentException("Missing required option '-sysin <file>'");
+    if (rsubOptions == null) rsubOptions = new RsubOptionSection();
 
-    Configurator configurator = (Configurator) rsubOptions.configuratorClass.newInstance();
-    IOMAdapter adapter = new IOMAdapter(configurator);
+    IConfigurator configurator = rsubOptions.configuratorClass.newInstance();
+    IOMAdapter adapter;
+    IDestination log = rsubOptions.destinationClass.newInstance();
+    if (log instanceof FileDestination) {
+      log.setOut(sasOptions.getLog());
+      if (sasOptions.print == null || sasOptions.print.getAbsolutePath().isEmpty()) {
+        adapter = new IOMAdapter(configurator, log);
+      } else {
+        IDestination print = rsubOptions.destinationClass.newInstance();
+        print.setOut(sasOptions.print);
+        adapter = new IOMAdapter(configurator, log, print);
+      }
+    } else {
+      adapter = new IOMAdapter(configurator);
+    }
     adapter.connect();
 
     List<String> header = getAutoexec();

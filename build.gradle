@@ -5,6 +5,7 @@ plugins {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'checkstyle'
+
     group = 'org.norc'
     version = getVersion()
 

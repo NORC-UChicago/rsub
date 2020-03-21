@@ -10,7 +10,9 @@ import com.sas.iom.orb.EventUtil;
 import com.sas.services.connection.*;
 
 public class IOMAdapter {
-  private final Configurator configurator;
+  private final IConfigurator configurator;
+  private final IDestination log;
+  private final IDestination print;
 
   private ConnectionInterface cx;
   private IWorkspace workspace;
@@ -22,8 +24,18 @@ public class IOMAdapter {
   protected int sysrc = 0;
   protected boolean complete = false;
 
-  public IOMAdapter(Configurator configurator) {
+  public IOMAdapter(IConfigurator configurator) {
+    this(configurator, new NullDestination());
+  }
+
+  public IOMAdapter(IConfigurator configurator, IDestination log) {
+    this(configurator, log, new NullDestination());
+  }
+
+  public IOMAdapter(IConfigurator configurator, IDestination log, IDestination print) {
     this.configurator = configurator;
+    this.log = log;
+    this.print = print;
   }
 
   public void connect() throws ConnectionFactoryException {
@@ -52,7 +64,7 @@ public class IOMAdapter {
         EventUtil.advise(languageService, ILanguageEvents_1_1Helper.id(), languageEventsServant);
 
     LanguageLogEventOperations languageLogEventOperations =
-        new LanguageLogEventOperations(new NullDestination(), new NullDestination());
+        new LanguageLogEventOperations(this.log, this.print);
     ILanguageLogEventPOATie languageLogEventServant =
         new ILanguageLogEventPOATie(languageLogEventOperations);
     languageLogEventHandle =
