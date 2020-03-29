@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<AuthenticationDomain Name="DefaultAuth">
+  <Logins>
+    <Login Name="user-name" UserID="user-name"
+      Password="{base64}XXX=="></Login>
+  </Logins>
+</AuthenticationDomain>
