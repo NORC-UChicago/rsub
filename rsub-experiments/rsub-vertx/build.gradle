@@ -1,0 +1,52 @@
+plugins {
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+ext {
+    vertxVersion = '3.8.4'
+    junitJupiterEngineVersion = '5.4.0'
+}
+
+application {
+    mainClassName = 'io.vertx.core.Launcher'
+}
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
+
+def mainVerticleName = 'org.norc.rsub.MainVerticle'
+
+dependencies {
+    implementation "io.vertx:vertx-core:$vertxVersion"
+    implementation "io.vertx:vertx-web:$vertxVersion"
+
+    testImplementation "io.vertx:vertx-junit5:$vertxVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterEngineVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterEngineVersion"
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Verticle': mainVerticleName
+    }
+    mergeServiceFiles {
+        include 'META-INT/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'PASSED', 'FAILED', 'SKIPPED'
+    }
+}
+
+def watchForChange = 'src/**/*'
+def doOnChange = 'gradlew :rsub-experiments:rsub-vertx:classes'
+def javaOpts = '"-Djava.library.path=C:\\PROGRA~1\\SASHome\\SASFoundation\\9.4\\core\\sasext"'
+
+run {
+    systemProperty "vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4j2LogDelegateFactory"
+    args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange", "--java-opts=$javaOpts"]
+}

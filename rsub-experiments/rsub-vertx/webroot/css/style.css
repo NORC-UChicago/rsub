@@ -1,0 +1,11 @@
+body {
+    margin: 20px;
+    padding: 20px;
+    font-family: calibri, verdana, arial, sans-serif;
+}
+
+.ace_editor {
+    border: 1px solid lightgray;
+    margin: auto;
+    height: 200px;
+}

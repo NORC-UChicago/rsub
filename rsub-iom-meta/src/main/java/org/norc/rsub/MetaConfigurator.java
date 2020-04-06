@@ -6,6 +6,7 @@ import com.sas.metadata.remote.*;
 import com.sas.services.connection.*;
 import com.sas.services.connection.omr.OMRConnectionFactoryConfiguration;
 
+@SuppressWarnings("unused")
 public class MetaConfigurator extends Configurator {
   public MetaConfigurator() throws Exception {
     String serverLogicalName =

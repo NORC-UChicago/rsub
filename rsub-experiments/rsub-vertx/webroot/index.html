@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!--
+  SAS with Vert.X
+    version 1.0.0
+  -->
+  <title>SAS with Vert.X</title>
+  <meta name="description" content="SAS with Vert.X">
+  <meta name="author" content="Matthew Kastin">
+  <link rel="stylesheet" href="/webroot/css/style.css">
+  <!-- clr -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clarity-ui/0.10.28/clarity-ui.min.css" integrity="sha256-02co5CslX9xVo7lEtk1q9KPFqZoZo4Jvcb+XeQmQb+Y=" crossorigin="anonymous" />
+  <!-- clr/icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clarity-icons/0.10.28/clarity-icons.min.css" integrity="sha256-LvMH7VFjZsVoPx7pqhmbl52IQF0GnLxlL5UUhTGFy2I=" crossorigin="anonymous" />
+  <script src="https://cdn.jsdelivr.net/npm/@clr/icons@3.1.0/clr-icons.min.js" integrity="sha256-Oikmm7m8ljC0YIz5aOeLbl4UHkfdPwyL4DKvKXrU600=" crossorigin="anonymous"></script>
+  <!-- jquery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js" integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i" crossorigin="anonymous"></script>
+  <!-- vertx/sockjs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/6.5.5/rxjs.umd.min.js" integrity="sha256-85uCh8dPb35sH3WK435rtYUKALbcvEQFC65eg+raeuc=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js" integrity="sha256-z4cKT3yF+afIn8eFXJc+nRpGtwcmNEClvf+ikgsZcRo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vertx/3.8.3/vertx-eventbus.min.js" integrity="sha256-JiL9zW1ngW+cfC/kzUHr/U08VUbxO1HmM0bE16HnWzE=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="/webroot/js/main.js"></script>
+</head>
+<body>
+<div class="main-container">
+  <div class="alert alert-app-level"></div>
+
+  <header class="header-5">
+    <div class="branding">
+      <a href="#" class="nav-link">
+        <clr-icon shape="cog"></clr-icon>
+        <span class="title">SAS with Vert.X</span>
+      </a>
+    </div>
+  </header>
+  <nav class="subnav">
+    <ul class="nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Dashboard</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="content-container">
+    <div class="content-area">
+      <form id="orderForm" action="/coffee" method="post" enctype="application/x-www-form-urlencoded">
+        <section class="form-block">
+          <label>Coffee Order Form</label>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="customer" placeholder="Enter your name here">
+          </div>
+          <div class="form-group">
+            <label for="coffee">Coffee</label>
+            <div class="select">
+              <select id="coffee" name="coffee">
+                <option value="espresso">Espresso</option>
+                <option value="americano">Caffé Americano</option>
+                <option value="latte">Caffé Latte</option>
+                <option value="mocha">Caffé Mocha</option>
+                <option value="cappuccino">Cappuccino</option>
+                <option value="macchiato">Macchiato</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="size">Size</label>
+              <div class="select">
+                <select id="size" name="size">
+                  <option value="s">Small</option>
+                  <option value="m">Medium</option>
+                  <option value="l">Large</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </section>
+      </form>
+      <div class="progress loop"><progress></progress></div>
+      <h1>Lst</h1>
+      <pre id="lst" class="language-log"></pre>
+      <h1>Log</h1>
+      <pre id="log" class="language-log"></pre>
+    </div>
+  </div>
+</div>
+</body>
+</html>

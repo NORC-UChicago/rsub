@@ -10,6 +10,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/rsub-cli" />
+            <option value="$PROJECT_DIR$/rsub-experiments" />
+            <option value="$PROJECT_DIR$/rsub-experiments/rsub-pool" />
+            <option value="$PROJECT_DIR$/rsub-experiments/rsub-vertx" />
             <option value="$PROJECT_DIR$/rsub-iom" />
             <option value="$PROJECT_DIR$/rsub-iom-meta" />
           </set>
