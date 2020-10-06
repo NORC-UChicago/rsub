@@ -2,10 +2,21 @@ package org.norc.rsub;
 
 import com.sas.meta.SASOMI.IOMI;
 import com.sas.meta.SASOMI.IOMIHelper;
-import com.sas.metadata.remote.*;
-import com.sas.services.connection.*;
+import com.sas.metadata.remote.CMetadata;
+import com.sas.metadata.remote.MdFactory;
+import com.sas.metadata.remote.MdFactoryImpl;
+import com.sas.metadata.remote.MdOMIUtil;
+import com.sas.metadata.remote.MdOMRConnection;
+import com.sas.services.connection.ConnectionFactoryConfiguration;
+import com.sas.services.connection.ConnectionFactoryInterface;
+import com.sas.services.connection.ConnectionFactoryManager;
+import com.sas.services.connection.ConnectionInterface;
 import com.sas.services.connection.omr.OMRConnectionFactoryConfiguration;
 
+/**
+ * MetaConfigurator uses a connection to a SAS Metadata Server to collect
+ * subsequent connection information about the available Workspace servers.
+ */
 @SuppressWarnings("unused")
 public class MetaConfigurator extends Configurator {
   public MetaConfigurator() throws Exception {
