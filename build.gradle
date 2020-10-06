@@ -35,6 +35,7 @@ subprojects {
 project(":rsub-cli") {
     dependencies {
         implementation project(":rsub-iom")
+        implementation project(":rsub-iom-meta")
     }
 }
 

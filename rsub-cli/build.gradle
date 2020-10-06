@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 mainClassName = "org.norc.rsub.App"
@@ -44,6 +45,7 @@ def scriptJvmOpts = [
 
 startScripts {
     defaultJvmOpts += scriptJvmOpts
+    windowsStartScriptGenerator.template = resources.text.fromFile('windowsStartScript.txt')
     doLast {
         unixScript.text = unixScript.text.replace("TEMP_HOME", "\$APP_HOME")
         windowsScript.text = windowsScript.text.replace("TEMP_HOME", "%APP_HOME%")
@@ -74,4 +76,4 @@ task powershellStartScript(type: PowershellStartScript) {
     windowsStartScriptGenerator = new NullStartScriptGenerator()
 }
 
-distZip.dependsOn powershellStartScript
+startScripts.dependsOn powershellStartScript
